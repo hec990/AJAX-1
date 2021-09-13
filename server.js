@@ -4,83 +4,67 @@ var url = require('url')
 var port = process.argv[2]
 
 if (!port) {
-	console.log('请指定端口号好不啦？\nnode server.js 8888 这样不会吗？')
-	process.exit(1)
+    console.log('请指定端口号好不啦？\nnode server.js 8888 这样不会吗？')
+    process.exit(1)
 }
 
 var server = http.createServer(function(request, response) {
-	var parsedUrl = url.parse(request.url, true)
-	var pathWithQuery = request.url
-	var queryString = ''
-	if (pathWithQuery.indexOf('?') >= 0) {
-		queryString = pathWithQuery.substring(pathWithQuery.indexOf('?'))
-	}
-	var path = parsedUrl.pathname
-	var query = parsedUrl.query
-	var method = request.method
+    var parsedUrl = url.parse(request.url, true)
+    var pathWithQuery = request.url
+    var queryString = ''
+    if (pathWithQuery.indexOf('?') >= 0) {
+        queryString = pathWithQuery.substring(pathWithQuery.indexOf('?'))
+    }
+    var path = parsedUrl.pathname
+    var query = parsedUrl.query
+    var method = request.method
 
-	/******** 从这里开始看，上面不要看 ************/
+    /******** 从这里开始看，上面不要看 ************/
 
-	console.log('有个傻子发请求过来啦！路径（带查询参数）为：' + pathWithQuery)
+    console.log('有个傻子发请求过来啦！路径（带查询参数）为：' + pathWithQuery)
 
-	// 访问根目录，响应的内容
-	if (path === '/') {
-		response.statusCode = 200
-		response.setHeader('Content-Type', 'text/html;charset=utf-8')
-		response.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <link rel="stylesheet" href="/x">
-        </head>
-        <body>
-        <h1>我的第一个HTTP请求</h1>
-        <script src="/y"></script>
-        </body>
-        </html>
-        `)
-		response.end()
-	} else if (path === '/style.css') {
-		response.statusCode = 200
-		response.setHeader('Content-Type', 'text/css;charset=utf-8')
-		response.write(fs.readFileSync('public/style.css'))
-		response.end()
-	} else if (path === '/index.html') { // 访问根目录带查询参数  ==> CSS code
-		response.statusCode = 200 // 状态码
-		response.setHeader('Content-Type', 'text/html;charset=utf-8')
-		response.write(`
-        <!DOCTYPE html>
-        <head>
-         <title>AJAX</title>
-        </head>
-        <body>
-        <h1>AJAX demo</h1>
+    // 访问根目录，响应的内容
+    if (path === '/index.html') {
+        response.statusCode = 200
+        response.setHeader('Content-Type', 'text/html;charset=utf-8')
+        const string = fs.readFileSync('public/index.html')
+        response.write(string)
+        response.end()
+    } else if (path === '/main.js') {
+        response.statusCode = 200
+        response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
+        response.write(fs.readFileSync('public/main.js'))
+        response.end()
+    } else if (path === '/style.css') {
+        response.statusCode = 200
+        response.setHeader('Content-Type', 'text/css;charset=utf-8')
+        response.write(fs.readFileSync('public/style.css'))
+        response.end()
+    } else if (path === '/1.js') {
+        response.statusCode = 200
+        response.setHeader('Content-Type', 'text/css;charset=utf-8')
+        response.write(fs.readFileSync('public/1.js'))
+        response.end()
+    } else if (path === '/2.html') {
+        response.statusCode = 200
+        response.setHeader('Content-Type', 'text/html;charset=utf-8')
+        response.write(fs.readFileSync('public/2.html'))
+        response.end()
+    } else if (path === '/3.xml') {
+        response.statusCode = 200
+        response.setHeader('Content-Type', 'text/xml;charset=utf-8')
+        response.write(fs.readFileSync('public/3.xml'))
+        response.end()
+    } else {
+        response.statusCode = 404
+        response.setHeader('Content-Type', 'text/html;charset=utf-8')
+        response.write(`你输入的路径不存在对应的内容`)
+        response.end()
+    }
 
-        <script src="/main.js"></script>
-        </body>
-        </html>
-        `)
-		response.end()
-	} else if (path === '/main.js') { // 访问根目录带查询参数  ==> JS code
-		response.statusCode = 200
-		response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-		response.write(`console.log('我是ajax')`)
-		response.end()
-	} else if (path === '/1.js') { 
-		response.statusCode = 200
-		response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-		response.write(fs.readFileSync('public/1.js'))
-		response.end()
-	}else {
-		response.statusCode = 404
-		response.setHeader('Content-Type', 'text/html;charset=utf-8')
-		response.write(`你输入的路径不存在对应的内容`)
-		response.end()
-	}
-	
-	
 
-	/******** 代码结束，下面不要看 ************/
+
+    /******** 代码结束，下面不要看 ************/
 
 })
 
